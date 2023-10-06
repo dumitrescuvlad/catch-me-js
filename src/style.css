@@ -1,0 +1,11 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: beige;
+  }
+  #app {
+    font-size: 30px;
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+  
