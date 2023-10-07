@@ -1,15 +1,23 @@
 var myParagraph = document.getElementById("app");
-var score = 0; // Initialize the score to 0
+var restartButton = document.getElementById("restart");
+var score = 0;
+var gameStarted = false; // Add a gameStarted flag
 
-// Function to update the score on the page
 function updateScore() {
   document.getElementById("score").textContent = "Score: " + score;
 }
 
-myParagraph.addEventListener("mouseover", function () {
-  if (myParagraph.classList.value) {
-    return;
-  }
+function startGame() {
+  myParagraph.innerText = "Catch me";
+  myParagraph.style.backgroundColor = "";
+  myParagraph.classList.remove("gotclicked");
+  score = 0;
+  updateScore();
+  restartButton.style.display = "none"; // Hide the restart button initially
+  gameStarted = false; // Reset the gameStarted flag
+}
+
+function continueGame() {
   var screenWidth = window.innerWidth;
   var screenHeight = window.innerHeight;
 
@@ -22,31 +30,48 @@ myParagraph.addEventListener("mouseover", function () {
 
   myParagraph.style.left = randomX + "px";
   myParagraph.style.top = randomY + "px";
-});
+}
 
-myParagraph.addEventListener("click", function () {
+function handleClick() {
+  if (!gameStarted) {
+    gameStarted = true; // Set the gameStarted flag to true
+    restartButton.style.display = "block"; // Hide the restart button initially
+  }
+
   if (!myParagraph.classList.contains("gotclicked")) {
-    console.log("hello");
     myParagraph.innerText = "Got me!";
     myParagraph.style.backgroundColor = "green";
     myParagraph.className = "gotclicked";
-    score++; // Increase the score when clicked
-    updateScore(); // Update the score on the page
-  }
+    score++;
+    updateScore();
 
-  // Check if the player has reached a certain score to end the game
-  if (score >= 10) {
-    alert("Game over! Your final score is: " + score);
-    score = 0; // Reset the score
-    updateScore(); // Update the score on the page
-    myParagraph.innerText = "Catch me";
-    myParagraph.style.backgroundColor = ""; // Reset button color
-    myParagraph.classList.remove("gotclicked");
+    if (score >= 10) {
+      alert("Congratulations! You completed the game with a score of " + score);
+      startGame();
+    } else {
+      continueGame();
+    }
+  }
+}
+
+myParagraph.addEventListener("mouseover", function () {
+  if (myParagraph.classList.value) {
+    return;
+  }
+  continueGame();
+});
+
+myParagraph.addEventListener("click", handleClick);
+
+// Add an event listener for the restart button
+restartButton.addEventListener("click", startGame);
+
+// Listen for the "P" key press to trigger the button click
+document.addEventListener("keydown", function (event) {
+  if (event.key === "p" || event.key === "P") {
+    handleClick();
   }
 });
 
-// Add an element to display the score on the page
-var scoreElement = document.createElement("div");
-scoreElement.id = "score";
-scoreElement.textContent = "Score: " + score;
-document.body.appendChild(scoreElement);
+// Start the game initially
+startGame();
