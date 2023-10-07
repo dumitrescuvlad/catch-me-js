@@ -14,7 +14,7 @@ function startGame() {
   score = 0;
   updateScore();
   restartButton.style.display = "none"; // Hide the restart button initially
-  gameStarted = false; // Reset the gameStarted flag
+  gameStarted = false; // Reset the gameStgiarted flag
 }
 
 function continueGame() {
