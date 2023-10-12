@@ -1,20 +1,24 @@
+import {BUTTON_CLICKED_VALUE} from './constants/button-click-value.js'
+
 var myParagraph = document.getElementById("app");
 var restartButton = document.getElementById("restart");
 var score = 0;
-var gameStarted = false; // Add a gameStarted flag
 
 function updateScore() {
   document.getElementById("score").textContent = "Score: " + score;
 }
 
-function startGame() {
+const resetButton = () => { 
   myParagraph.innerText = "Catch me";
   myParagraph.style.backgroundColor = "";
-  myParagraph.classList.remove("gotclicked");
+  myParagraph.classList.remove(BUTTON_CLICKED_VALUE);
+}
+
+function startGame() {
   score = 0;
+  resetButton()
   updateScore();
   restartButton.style.display = "none"; // Hide the restart button initially
-  gameStarted = false; // Reset the gameStgiarted flag
 }
 
 function continueGame() {
@@ -33,15 +37,16 @@ function continueGame() {
 }
 
 function handleClick() {
-  if (!gameStarted) {
-    gameStarted = true; // Set the gameStarted flag to true
+  const isClicked = myParagraph.classList.contains(BUTTON_CLICKED_VALUE)
+  if (isClicked) {
     restartButton.style.display = "block"; // Hide the restart button initially
+    resetButton()
   }
 
-  if (!myParagraph.classList.contains("gotclicked")) {
+  if (!isClicked) {
     myParagraph.innerText = "Got me!";
     myParagraph.style.backgroundColor = "green";
-    myParagraph.className = "gotclicked";
+    myParagraph.className = BUTTON_CLICKED_VALUE;
     score++;
     updateScore();
 
@@ -55,10 +60,17 @@ function handleClick() {
 }
 
 myParagraph.addEventListener("mouseover", function () {
-  if (myParagraph.classList.value) {
-    return;
-  }
-  continueGame();
+  const isClicked =myParagraph.classList.contains(BUTTON_CLICKED_VALUE)
+  /*
+    What can happen when we hover over the button: 
+      - the button will run away from us, so we are still playing.
+      - we catched the button, it is static, and we can handle how the game logic should continue
+
+    notes: 
+      when we are in the second phase of the game and so we were able to catch the button, the button has as className BUTTON_CLICKED_VALUE  
+  */
+  if (!isClicked) continueGame();
+  
 });
 
 myParagraph.addEventListener("click", handleClick);

@@ -1,0 +1,1 @@
+export const BUTTON_CLICKED_VALUE =  "gotclicked"
